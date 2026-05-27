@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+class Solution {
+public:
+    int numberOfSpecialChars(string word) {
+        vector<int> firstUpper(26, -1);
+        vector<int> lastLower(26, -1);
+
+        for (int i = 0; i < word.size(); i++) {
+            char ch = word[i];
+
+            if (islower(ch)) {
+                lastLower[ch - 'a'] = i;
+            } else {
+                if (firstUpper[ch - 'A'] == -1) {
+                    firstUpper[ch - 'A'] = i;
+                }
+            }
+        }
+
+        int count = 0;
+
+        for (int i = 0; i < 26; i++) {
+            if (lastLower[i] != -1 &&
+                firstUpper[i] != -1 &&
+                lastLower[i] < firstUpper[i]) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+};
+
+int main() {
+    Solution sol;
+
+    vector<string> testCases = {
+        "aaAbcBC", // 3
+        "abc",     // 0
+        "AbBCab",  // 0
+        "aA",      // 1
+        "Aa",      // 0
+        "abcABC"   // 3
+    };
+
+    for (string word : testCases) {
+        cout << "Input: " << word << endl;
+        cout << "Output: " << sol.numberOfSpecialChars(word) << endl;
+        cout << "------------------" << endl;
+    }
+
+    return 0;
+}
